@@ -50,16 +50,16 @@ NODE_TYPE=$1
 
 
 function install_docker {
-  
-  sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-  sudo yum-config-manager --add-repo \
+  echo " [ FUNCTION: install_docker $NODE_TYPE ] -- installing docker for $NODE_TYPE node"  
+  yum install -y yum-utils device-mapper-persistent-data lvm2
+  yum-config-manager --add-repo \
     https://download.docker.com/linux/centos/docker-ce.repo
-  sudo yum update -y && yum install -y \
+  yum update -y && yum install -y \
     containerd.io-1.2.13 \
     docker-ce-19.03.11 \
     docker-ce-cli-19.03.11
-  sudo mkdir /etc/docker
-  sudo cat > /etc/docker/daemon.json <<EOF
+  mkdir /etc/docker
+  cat > /etc/docker/daemon.json <<-EOF
   {
     "exec-opts": ["native.cgroupdriver=systemd"],
     "log-driver": "json-file",
@@ -73,16 +73,17 @@ function install_docker {
   }
   EOF
   
-  sudo mkdir -p /etc/systemd/system/docker.service.d
-  sudo systemctl daemon-reload
-  sudo systemctl restart docker
-  sudo systemctl enable docker
+  mkdir -p /etc/systemd/system/docker.service.d
+  systemctl daemon-reload
+  systemctl restart docker
+  systemctl enable docker
 }
 
 
 function install_k8s {
-  sudo rpm --import https://packages.cloud.google.com/yum/doc/yum-key.gpg
-  cat > /etc/yum.repos.d/kubernetes.repo <<EOF
+  echo "[ FUNCTION: install_k8s $NODE_TYPE ] -- installing k8's bins for $NODE_TYPE node"
+  rpm --import https://packages.cloud.google.com/yum/doc/yum-key.gpg
+  cat > /etc/yum.repos.d/kubernetes.repo <<-EOF
   [kubernetes]
   name=Kubernetes
   baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
@@ -91,91 +92,93 @@ function install_k8s {
   repo_gpgcheck=1
   gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
   EOF
-  sudo yum install -y kubelet kubeadm kubectl
-  sudo systemctl start kubelet
-  sudo systemctl enable kubelet
+  yum install -y kubelet kubeadm kubectl
+  systemctl start kubelet
+  systemctl enable kubelet
   
+}
+
+
+function master_node {
+  echo "[ FUNCTION: master_node $NODE_TYPE ] -- INSTALLING MASTER NODE SPECIFIC FIREWALL ITEMS $NODE_TYPE node"
+  HOSTNAMECTL=`which hostnamectl`
+  [[ -z $HOSTNAMECTL ]] || echo -e 1>&2 "must install hostnamectl" exit 1 ## sudo yum install -y hostnamectl
+  hostnamectl set-hostname master-node
+  
+    ## TODO 
+  ## make a hosts DNS record to resolve the hostname for all the nodes
+      #### example
+  	# sudo vi /etc/hosts
+  	# 192.168.1.10 master.phoenixnap.com master-node
+  	# 192.168.1.20 node1. phoenixnap.com node1 worker-node
+  FIREWALL_CMD=`which firewall-cmd`
+  [[ -z $FIREWALL_CMD ]] || echo -e 1>&2 "must install and enable firewalld" exit 1 ## sudo yum install -y firewalld
+  
+  ### master node only
+  firewall-cmd --permanent --add-port=6443/tcp
+  firewall-cmd --permanent --add-port=2379-2380/tcp
+  firewall-cmd --permanent --add-port=10250/tcp
+  firewall-cmd --permanent --add-port=10251/tcp
+  firewall-cmd --permanent --add-port=10252/tcp
+  firewall-cmd --permanent --add-port=10255/tcp
+  firewall-cmd --reload
+}
+
+
+function worker_node {
+  echo "[ FUNCTION: worker_node $NODE_TYPE ] -- installing worker node specific firewall items for $NODE_TYPE node"
+  HOSTNAMECTL=`which hostnamectl`
+  [[ -z $HOSTNAMECTL ]] || echo -e 1>&2 "must install hostnamectl" exit 1 ## sudo yum install -y hostnamectl
+  hostnamectl set-hostname worker-node
+  
+  FIREWALL_CMD=`which firewall-cmd`
+  [[ -z $FIREWALL_CMD ]] || echo -e 1>&2 "must install and enable firewalld" exit 1 ## sudo yum install -y firewalld
+  
+  sudo firewall-cmd --permanent --add-port=10251/tcp
+  sudo firewall-cmd --permanent --add-port=10255/tcp
+  firewall-cmd --reload
+}
+
+
+function iptables {
+  echo "[ FUNCTION: iptables $NODE_TABLES ] -- installing iptables for $NODE_TYPE node"
+  cat <<-EOF > /etc/sysctl.d/k8s.conf
+  net.bridge.bridge-nf-call-ip6tables = 1
+  net.bridge.bridge-nf-call-iptables = 1
+  EOF
+  sysctl --system
+  
+  ## disable selinux
+  sudo setenforce 0
+  sudo sed -i 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
+  
+  ## disable swap
+  sudo sed -i '/swap/d' /etc/fstab
+  sudo swapoff -a
+}
+
+
+function deploy_cluster {
+  echo "[ FUNCTION: deploy_cluster $NODE_TYPE ] -- deploying cluster for $NODE_TYPE node"
+  sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+  mkdir -p $HOME/.kube
+  cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  chown $(id -u):$(id -g) $HOME/.kube/config
+  
+  ## set up pod network w/ flannel
+  kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 }
 
 
 
 ### logic
 install_docker
-instal_k8s
+install_k8s
+# based on user input
+[[ $NODE_TYPE == master ]] && master_node
+[[ $NODE_TYPE == worker ]] && worker_node
+
+iptables
+[[ $NODE_TYPE == master ]] && deploy_cluster
 
 
- 
-##  ## TODO - function for master and worker
-##  ### now set this one up as a master or worker node
-##  HOSTNAMECTL=`which hostnamectl`
-##  [[ -z $HOSTNAMECTL ]] || echo -e 1>&2 "must install hostnamectl" exit 1 ## sudo yum install -y hostnamectl
-##  sudo hostnamectl set-hostname worker-node
-##  
-##    ## TODO 
-##  ## make a hosts DNS record to resolve the hostname for all the nodes
-##      #### example
-##  	# sudo vi /etc/hosts
-##  	# 192.168.1.10 master.phoenixnap.com master-node
-##  	# 192.168.1.20 node1. phoenixnap.com node1 worker-node
-##  
-##  
-##  
-##  ## configure firewalld
-##  FIREWALLCMD=`which firewall-cmd`
-##  [[ -z $FIREWALLCMD ]] || echo -e 1>&2 "must install and enable firewalld" exit 1
-##  
-##  ### master node only
-##  sudo firewall-cmd --permanent --add-port=6443/tcp
-##  sudo firewall-cmd --permanent --add-port=2379-2380/tcp
-##  sudo firewall-cmd --permanent --add-port=10250/tcp
-##  sudo firewall-cmd --permanent --add-port=10251/tcp
-##  sudo firewall-cmd --permanent --add-port=10252/tcp
-##  sudo firewall-cmd --permanent --add-port=10255/tcp
-##  sudo firewall-cmd --reload
-##  
-##  ### worker nodes
-##  sudo firewall-cmd --permanent --add-port=10251/tcp
-##  sudo firewall-cmd --permanent --add-port=10255/tcp
-##  firewall-cmd --reload
-##  
-##  ## update iptables settings
-##  cat <<-EOF > /etc/sysctl.d/k8s.conf
-##  net.bridge.bridge-nf-call-ip6tables = 1
-##  net.bridge.bridge-nf-call-iptables = 1
-##  EOF
-##  sysctl --system
-##  
-##  
-##  ## disable selinux
-##  sudo setenforce 0
-##  sudo sed -i 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
-##  
-##  
-##  ## disable swap
-##  sudo sed -i '/swap/d' /etc/fstab
-##  sudo swapoff -a
-##  
-##  
-##  #### deploy cluster
-##  sudo kubeadm init --pod-network-cidr=10.244.0.0/16   ### this may take some time, SAVE THE JOIN MESSAGE AND TOKEN, use to join other nodes to cluster.
-##  
-##  
-##  ## make .kube/config
-##  mkdir -p $HOME/.kube
-##  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-##  sudo chown $(id -u):$(id -g) $HOME/.kube/config
-##  
-##  
-##  ## set up pod network w/ flannel
-##  sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-##  
-##  
-##  ## check status of cluster
-##  ## when flannel install finishes check for CoreDNS pod is up
-##  sudo kubectl get nodes
-##  sudo kubectl get pods --all-namespaces
-##  
-##  
-##  # join other nodes to cluster  (from kubeadm step ^^^)
-##  # kubeadm join --discovery-token cfgrty.1234567890jyrfgd --discovery-token-ca-cert-hash sha256:1234..cdef 1.2.3.4:6443
-##  
