@@ -45,12 +45,12 @@ EOF
 sudo yum install -y kubelet kubeadm kubectl
 sudo systemctl enable kubelet
 sudo systemctl start kubelet
-sudo systemctl start docker
-sudo systemctl enable docker
 
 
 ## Thats was easy.....
-## Hers a helpful link:  https://phoenixnap.com/kb/how-to-install-kubernetes-on-centos
+## Hers are helpful links: 
+#	https://phoenixnap.com/kb/how-to-install-kubernetes-on-centos
+#	https://kubernetes.io/docs/setup/production-environment/container-runtimes/
 
 
 ### now set this one up as a master or worker node
