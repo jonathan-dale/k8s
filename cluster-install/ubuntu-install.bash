@@ -20,7 +20,7 @@ cat << EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
 deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
 
-# update and install bins
+# update and install bins *** Check correct ubuntu distro (focal, bionic...)
 sudo apt-get update
 sudo apt-get install -y docker-ce=5:19.03.12~3-0~ubuntu-focal kubelet=1.17.8-00 kubeadm=1.17.8-00 kubectl=1.17.8-00
 sudo apt-mark hold docker-ce kubelet kubeadm kubectl
