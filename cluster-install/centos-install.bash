@@ -7,12 +7,6 @@ function abort {
   exit "$EXIT_VAL"
 }
 
-function die {
-  MESS="$1"
-  EXIT_VAL="${2:-1}"
-  echo 1>&2 "$MESS"
-  exit "$EXIT_VAL"
-}
 
 function usage {
   EXIT_VAL="${1:-0}"
