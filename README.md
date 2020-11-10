@@ -1,4 +1,6 @@
-# Howdy!
+# K8's installation and notes
 
-## This is the start of great things...stick around 
+## scripts to install k8's cluster on Ubuntu or CentOS
+
+##### may not be updated or tested after Nov 2020
 

@@ -32,7 +32,10 @@ echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
 
 
-### master only ###
-# initialize cluster and add calico CNI network overlay
-#sudo kubeadm init --pod-network-cidr=10.244.0.0/16
-#kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+echo "finished installing......."
+cat <<EOF
+     ### master only ###
+     # initialize cluster and add calico CNI network overlay
+     # sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+     # kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+EOF
