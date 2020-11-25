@@ -108,7 +108,7 @@ EOF
 
 function master_node {
   echo "[ FUNCTION: master_node $NODE_TYPE ] -- INSTALLING MASTER NODE SPECIFIC FIREWALL ITEMS $NODE_TYPE node"
-  HOSTNAMECTL=`which hostnamectl`
+  HOSTNAMECTL=`hostnamectl`
   [[ ! -z $HOSTNAMECTL ]] || die "must install hostnamectl" 1 ## yum install -y hostnamectl
   hostnamectl set-hostname master-node
   
@@ -134,8 +134,8 @@ function master_node {
 
 function worker_node {
   echo "[ FUNCTION: worker_node $NODE_TYPE ] -- installing worker node specific firewall items for $NODE_TYPE node"
-  HOSTNAMECTL=`which hostnamectl`
-  [[ -z $HOSTNAMECTL ]] || die "must install hostnamectl" 1 ## yum install -y hostnamectl
+  HOSTNAMECTL=`hostnamectl`
+  [[ ! -z $HOSTNAMECTL ]] || die "must install hostnamectl" 1 ## yum install -y hostnamectl
   hostnamectl set-hostname worker-node
   
   FIREWALL_CMD=`which firewall-cmd`
