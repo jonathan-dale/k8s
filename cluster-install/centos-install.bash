@@ -36,6 +36,14 @@ function usage {
   exit "$EXIT_VAL"
 }
 
+
+function die {
+  MESS="$1"
+  EXIT_VAL="${2:-1}"
+  echo 1>&2 "$MESS"
+  exit "$EXIT_VAL"
+}
+
 # are we building a master or worker node
 NODE_TYPE=$1
 
@@ -96,7 +104,7 @@ function install_k8s {
 function master_node {
   echo "[ FUNCTION: master_node $NODE_TYPE ] -- INSTALLING MASTER NODE SPECIFIC FIREWALL ITEMS $NODE_TYPE node"
   HOSTNAMECTL=`which hostnamectl`
-  [[ -z $HOSTNAMECTL ]] || echo -e 1>&2 "must install hostnamectl" exit 1 ## sudo yum install -y hostnamectl
+  [[ -z $HOSTNAMECTL ]] || die "must install hostnamectl" 1 ## sudo yum install -y hostnamectl
   hostnamectl set-hostname master-node
   
     ## TODO 
@@ -106,7 +114,7 @@ function master_node {
   	# 192.168.1.10 master.phoenixnap.com master-node
   	# 192.168.1.20 node1. phoenixnap.com node1 worker-node
   FIREWALL_CMD=`which firewall-cmd`
-  [[ -z $FIREWALL_CMD ]] || echo -e 1>&2 "must install and enable firewalld" exit 1 ## sudo yum install -y firewalld
+  [[ -z $FIREWALL_CMD ]] || die "must install and enable firewalld" 1 ## sudo yum install -y firewalld
   
   ### master node only
   firewall-cmd --permanent --add-port=6443/tcp
@@ -122,11 +130,11 @@ function master_node {
 function worker_node {
   echo "[ FUNCTION: worker_node $NODE_TYPE ] -- installing worker node specific firewall items for $NODE_TYPE node"
   HOSTNAMECTL=`which hostnamectl`
-  [[ -z $HOSTNAMECTL ]] || echo -e 1>&2 "must install hostnamectl" exit 1 ## sudo yum install -y hostnamectl
+  [[ -z $HOSTNAMECTL ]] || die "must install hostnamectl" 1 ## sudo yum install -y hostnamectl
   hostnamectl set-hostname worker-node
   
   FIREWALL_CMD=`which firewall-cmd`
-  [[ -z $FIREWALL_CMD ]] || echo -e 1>&2 "must install and enable firewalld" exit 1 ## sudo yum install -y firewalld
+  [[ -z $FIREWALL_CMD ]] || die "must install and enable firewalld" 1 ## sudo yum install -y firewalld
   
   sudo firewall-cmd --permanent --add-port=10251/tcp
   sudo firewall-cmd --permanent --add-port=10255/tcp
