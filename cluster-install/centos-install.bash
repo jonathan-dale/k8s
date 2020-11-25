@@ -44,6 +44,11 @@ function die {
   exit "$EXIT_VAL"
 }
 
+
+AMIROOT=`id -u`
+
+[[ "$AMIROOT" == 0 ]] || die "must be root to run this..." 2
+
 # are we building a master or worker node
 NODE_TYPE=$1
 
@@ -104,17 +109,17 @@ function install_k8s {
 function master_node {
   echo "[ FUNCTION: master_node $NODE_TYPE ] -- INSTALLING MASTER NODE SPECIFIC FIREWALL ITEMS $NODE_TYPE node"
   HOSTNAMECTL=`which hostnamectl`
-  [[ -z $HOSTNAMECTL ]] || die "must install hostnamectl" 1 ## sudo yum install -y hostnamectl
+  [[ -z $HOSTNAMECTL ]] || die "must install hostnamectl" 1 ## yum install -y hostnamectl
   hostnamectl set-hostname master-node
   
     ## TODO 
   ## make a hosts DNS record to resolve the hostname for all the nodes
       #### example
-  	# sudo vi /etc/hosts
+  	# vi /etc/hosts
   	# 192.168.1.10 master.phoenixnap.com master-node
   	# 192.168.1.20 node1. phoenixnap.com node1 worker-node
   FIREWALL_CMD=`which firewall-cmd`
-  [[ -z $FIREWALL_CMD ]] || die "must install and enable firewalld" 1 ## sudo yum install -y firewalld
+  [[ -z $FIREWALL_CMD ]] || die "must install and enable firewalld" 1 ## yum install -y firewalld
   
   ### master node only
   firewall-cmd --permanent --add-port=6443/tcp
@@ -130,14 +135,14 @@ function master_node {
 function worker_node {
   echo "[ FUNCTION: worker_node $NODE_TYPE ] -- installing worker node specific firewall items for $NODE_TYPE node"
   HOSTNAMECTL=`which hostnamectl`
-  [[ -z $HOSTNAMECTL ]] || die "must install hostnamectl" 1 ## sudo yum install -y hostnamectl
+  [[ -z $HOSTNAMECTL ]] || die "must install hostnamectl" 1 ## yum install -y hostnamectl
   hostnamectl set-hostname worker-node
   
   FIREWALL_CMD=`which firewall-cmd`
-  [[ -z $FIREWALL_CMD ]] || die "must install and enable firewalld" 1 ## sudo yum install -y firewalld
+  [[ -z $FIREWALL_CMD ]] || die "must install and enable firewalld" 1 ## yum install -y firewalld
   
-  sudo firewall-cmd --permanent --add-port=10251/tcp
-  sudo firewall-cmd --permanent --add-port=10255/tcp
+  firewall-cmd --permanent --add-port=10251/tcp
+  firewall-cmd --permanent --add-port=10255/tcp
   firewall-cmd --reload
 }
 
@@ -151,18 +156,18 @@ function iptables {
   sysctl --system
   
   ## disable selinux
-  sudo setenforce 0
-  sudo sed -i 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
+  setenforce 0
+  sed -i 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
   
   ## disable swap
-  sudo sed -i '/swap/d' /etc/fstab
-  sudo swapoff -a
+  sed -i '/swap/d' /etc/fstab
+  swapoff -a
 }
 
 
 function deploy_cluster {
   echo "[ FUNCTION: deploy_cluster $NODE_TYPE ] -- deploying cluster for $NODE_TYPE node"
-  sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+  kubeadm init --pod-network-cidr=10.244.0.0/16
   mkdir -p $HOME/.kube
   cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
   chown $(id -u):$(id -g) $HOME/.kube/config
