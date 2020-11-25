@@ -78,7 +78,7 @@ function install_docker {
       "overlay2.override_kernel_check=true"
     ]
   }
-  EOF
+EOF
   
   mkdir -p /etc/systemd/system/docker.service.d
   systemctl daemon-reload
@@ -98,7 +98,7 @@ function install_k8s {
   gpgcheck=1
   repo_gpgcheck=1
   gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-  EOF
+EOF
   yum install -y kubelet kubeadm kubectl
   systemctl start kubelet
   systemctl enable kubelet
@@ -109,7 +109,7 @@ function install_k8s {
 function master_node {
   echo "[ FUNCTION: master_node $NODE_TYPE ] -- INSTALLING MASTER NODE SPECIFIC FIREWALL ITEMS $NODE_TYPE node"
   HOSTNAMECTL=`which hostnamectl`
-  [[ -z $HOSTNAMECTL ]] || die "must install hostnamectl" 1 ## yum install -y hostnamectl
+  [[ ! -z $HOSTNAMECTL ]] || die "must install hostnamectl" 1 ## yum install -y hostnamectl
   hostnamectl set-hostname master-node
   
     ## TODO 
@@ -152,7 +152,7 @@ function iptables {
   cat <<-EOF > /etc/sysctl.d/k8s.conf
   net.bridge.bridge-nf-call-ip6tables = 1
   net.bridge.bridge-nf-call-iptables = 1
-  EOF
+EOF
   sysctl --system
   
   ## disable selinux
