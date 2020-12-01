@@ -1,5 +1,7 @@
 #!/bin/bash
 
+## I found this on reddit :)
+
 DIR='k8s-manifests/namespaces'
 mkdir -p $DIR
 for NAMESPACE in $(kubectl get -o=name namespaces | cut -d '/' -f2) ; do
