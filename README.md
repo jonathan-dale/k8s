@@ -15,7 +15,7 @@ echo 'complete -F __start_kubectl k' >>~/.zshrc
 ```bash
 echo 'source <(kubectl completion bash)' >>~/.bashrc
 ```
-if you have an aliss for kubectl - extend completion for that alias
+> NOTE: if you have an alias for kubectl - extend completion for that alias
 ```bash
 echo 'alias k=kubectl' >>~/.bashrc
 echo 'complete -F __start_kubectl k' >>~/.bashrc
