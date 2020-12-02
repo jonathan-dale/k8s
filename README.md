@@ -21,3 +21,19 @@ echo 'alias k=kubectl' >>~/.bashrc
 echo 'complete -F __start_kubectl k' >>~/.bashrc
 ```
 
+
+## kubectx - change namespaces and contexts in k8's cluster
+- https://github.com/ahmetb/kubectx
+
+### Installation for macOS
+
+#### Homebrew
+
+If you use [Homebrew](https://brew.sh/) you can install like this:
+
+    brew install kubectx
+
+This command will set up bash/zsh/fish completion scripts automatically.
+
+- If you like to add context/namespace info to your shell prompt (`$PS1`),
+  I recommend trying out [kube-ps1](https://github.com/jonmosco/kube-ps1).
