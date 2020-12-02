@@ -4,7 +4,7 @@
 
 ##### may not be updated or tested after Nov 2020
 
-# install autocompletion
+# Kubectl autocompletion
 
 ### zsh
 ```bash
@@ -22,11 +22,11 @@ echo 'complete -F __start_kubectl k' >>~/.bashrc
 ```
 
 
-## kubectx - change namespaces and contexts in k8's cluster
+## kubectx 
+#### change namespaces and contexts in k8's cluster
 - https://github.com/ahmetb/kubectx
 
 ### Installation for macOS
-
 #### Homebrew
 
 If you use [Homebrew](https://brew.sh/) you can install like this:
