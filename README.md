@@ -35,5 +35,9 @@ If you use [Homebrew](https://brew.sh/) you can install like this:
 
 This command will set up bash/zsh/fish completion scripts automatically.
 
-- If you like to add context/namespace info to your shell prompt (`$PS1`),
-  I recommend trying out [kube-ps1](https://github.com/jonmosco/kube-ps1).
+### Manal 
+- installation steps:
+
+sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
+sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
+sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
