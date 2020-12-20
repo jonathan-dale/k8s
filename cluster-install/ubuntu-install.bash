@@ -22,44 +22,82 @@ AMIROOT=`id -u`
 # install junk
 sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg2
 
-# get GPG key
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
-# add docker repo
-sudo add-apt-repository \
-    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
-
-# add K8's GPG key
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-
-# add K8's repo
-cat << EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
-deb https://apt.kubernetes.io/ kubernetes-xenial main
+function install_containerd {
+  cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
+  overlay
+  br_netfilter
 EOF
+  
+  sudo modprobe overlay
+  sudo modprobe br_netfilter
+  
+  # Setup required sysctl params, these persist across reboots.
+  cat <<EOF | sudo tee /etc/sysctl.d/99-kubernetes-cri.conf
+  net.bridge.bridge-nf-call-iptables  = 1
+  net.ipv4.ip_forward                 = 1
+  net.bridge.bridge-nf-call-ip6tables = 1
+EOF
+  
+  # Apply sysctl params without reboot
+  sudo sysctl --system
 
-# update and install bins *** Check correct ubuntu distro (focal, bionic...)
-## we use version 1.17.x.xx here so we can do an update later,
-## change this if you want newer versions
-sudo apt-get update
-sudo apt-get install -y docker-ce=5:19.03.12~3-0~ubuntu-focal kubelet=1.17.8-00 kubeadm=1.17.8-00 kubectl=1.17.8-00
-sudo apt-mark hold docker-ce kubelet kubeadm kubectl
 
-# add ip tables
-echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
+  ## Add Docker's official GPG key
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key --keyring /etc/apt/trusted.gpg.d/docker.gpg add -
+  
+  ## Add Docker apt repository.
+  sudo add-apt-repository \
+      "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) \
+      stable"
+  
+  ## Install containerd
+  sudo apt-get update && sudo apt-get install -y containerd.io
 
-# enable iptables immediately
-sudo sysctl -p
+  # Configure containerd
+  sudo mkdir -p /etc/containerd
+  sudo containerd config default | sudo tee /etc/containerd/config.toml
+  
+  # Restart containerd
+  sudo systemctl restart containerd
+} 
 
 
+
+function install_kubernetes {
+  # add K8's GPG key
+  curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+  
+  # add K8's repo
+  cat << EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
+  deb https://apt.kubernetes.io/ kubernetes-xenial main
+  EOF
+  
+  # update and install bins *** Check correct ubuntu distro (focal, bionic...)
+  ## we use version 1.19.x.xx here so we can do an update later,
+  ## change this if you want newer versions
+  sudo apt-get update
+  sudo apt-get install -y kubelet=1.19.0-00 kubeadm=1.19.0-00 kubectl=1.19.0-00
+  sudo apt-mark hold kubelet kubeadm kubectl
+  
+  # add ip tables and enable immediately
+  echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
+  sudo sysctl -p
+}
+  
+
+install_containerd
+instal_kubernetes
+
+# awesome!
 cat <<EOF
 
 
      finished installing.......
 
      ### on master nodes run these commands ###
-     # initialize cluster and add calico CNI network overlay
+     # initialize cluster and add a CNI network overlay
      # sudo kubeadm init --pod-network-cidr=10.244.0.0/16
      # kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
 
