@@ -1,5 +1,10 @@
 #!/bin/bash
 
+set -eoux pipefail
+# -e exits immediately on failure
+# -o pipefail exits when any command in a pipe of commands returns non zero exit code not just the last command
+# -u treat unset varables as errors and exit
+# -x print each command before executing
 
 function abort {
   EXIT_VAL="$?"
