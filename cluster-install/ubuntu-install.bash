@@ -88,7 +88,7 @@ function install_kubernetes {
   
 
 install_containerd
-instal_kubernetes
+install_kubernetes
 
 # awesome!
 cat <<EOF
