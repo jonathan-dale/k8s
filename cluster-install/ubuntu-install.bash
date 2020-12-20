@@ -72,7 +72,7 @@ function install_kubernetes {
   # add K8's repo
   cat << EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
   deb https://apt.kubernetes.io/ kubernetes-xenial main
-  EOF
+EOF
   
   # update and install bins *** Check correct ubuntu distro (focal, bionic...)
   ## we use version 1.19.x.xx here so we can do an update later,
@@ -93,13 +93,14 @@ install_kubernetes
 # awesome!
 cat <<EOF
 
-
+     Awesome!
      finished installing.......
 
-     ### on master nodes run these commands ###
-     # initialize cluster and add a CNI network overlay
-     # sudo kubeadm init --pod-network-cidr=10.244.0.0/16
-     # kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+     ### If this is a  master node, initialize cluster and add a CNI network overlay
+     ### with these commands:
+
+     $ sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+     $ kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
 
 
 EOF
