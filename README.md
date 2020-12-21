@@ -1,5 +1,5 @@
 > Updated and tested as of Dec 20, 2020
-> Currently uses kuebctl, kubeadm, and kubelet version 1.19.00-xx
+  Currently uses kuebctl, kubeadm, and kubelet version 1.19.00-xx
 # K8's cluster installation, backups, and notes
 
 ######
