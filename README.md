@@ -1,11 +1,11 @@
 # K8's cluster installation, backups, and notes
 
-> NOTE Updated and tested as of Dec 20, 2020
+## > Updated and tested as of Dec 20, 2020
 
 - A cluster installation script (choose Ubuntu or CentOS)
 - A cluster backup script
 
-##### setup commands
+##### Setup commands for a fresh server
 
 - ubuntu
 ```bash
@@ -16,7 +16,6 @@ sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git
 ```bash
 sudo yum update -y && sudo yum upgrade -y && sudo yum install -y git && git clone https://github.com/jonathan-dale/k8s.git
 ```
-
 
 
 ##### Kubectl autocompletion
