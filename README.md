@@ -1,17 +1,32 @@
-# K8's installation and notes
+# K8's cluster installation, backups, and notes
 
-## scripts to install k8's cluster on Ubuntu or CentOS, and a backup cluster script
+> NOTE Updated and tested as of Dec 20, 2020
 
-##### may not be updated or tested after Nov 2020
+- A cluster installation script (choose Ubuntu or CentOS)
+- A cluster backup script
 
-# Kubectl autocompletion
+##### setup commands
 
-### zsh
+- ubuntu
+```bash
+sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git && git clone https://github.com/jonathan-dale/k8s.git
+```
+
+- centos
+```bash
+sudo yum update -y && sudo yum upgrade -y && sudo yum install -y git && git clone https://github.com/jonathan-dale/k8s.git
+```
+
+
+
+##### Kubectl autocompletion
+- zsh
 ```bash
 echo 'alias k=kubectl' >>~/.zshrc
 echo 'complete -F __start_kubectl k' >>~/.zshrc
 ```
-### bash on linux
+
+- bash on linux
 ```bash
 echo 'source <(kubectl completion bash)' >>~/.bashrc
 ```
@@ -22,22 +37,18 @@ echo 'complete -F __start_kubectl k' >>~/.bashrc
 ```
 
 
-## kubectx 
-#### change namespaces and contexts in k8's cluster
-- https://github.com/ahmetb/kubectx
+#### Install kubectx to change namespaces and contexts in k8's cluster
+-  https://github.com/ahmetb/kubectx
 
-### Installation for macOS
-#### Homebrew
-
+###### macOS
 If you use [Homebrew](https://brew.sh/) you can install like this:
 
     brew install kubectx
 
-This command will set up bash/zsh/fish completion scripts automatically.
+That ^^^ command will set up bash/zsh/fish completion scripts automatically.
 
-### Manal 
-- installation steps:
+###### Manal installation steps:
+    sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
+    sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
+    sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 
-sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
-sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
-sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
