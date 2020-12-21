@@ -1,6 +1,6 @@
 # K8's cluster installation, backups, and notes
 
-## > Updated and tested as of Dec 20, 2020
+> Updated and tested as of Dec 20, 2020
 
 - A cluster installation script (choose Ubuntu or CentOS)
 - A cluster backup script
