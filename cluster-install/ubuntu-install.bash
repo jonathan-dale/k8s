@@ -108,5 +108,8 @@ cat <<EOF
      $ sudo kubeadm init --pod-network-cidr=10.244.0.0/16
      $ kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
 
+     ## Use this for K9s
+     $ sudo snap install k9s
+
 
 EOF
