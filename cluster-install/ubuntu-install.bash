@@ -53,6 +53,7 @@ EOF
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key --keyring /etc/apt/trusted.gpg.d/docker.gpg add -
   
   ## Add Docker apt repository.
+  ## *** Find the correct ubuntu distro with $(lsb_release -cs) (e.g. focal, bionic...)
   sudo add-apt-repository \
       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
       $(lsb_release -cs) \
@@ -80,9 +81,8 @@ function install_kubernetes {
   deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
   
-  # update and install bins *** Check correct ubuntu distro (focal, bionic...)
+  # update and install bins 
   ## we use version 1.19.x.xx here so we can do an update later,
-  ## change this if you want newer versions
   sudo apt-get update
   sudo apt-get install -y kubelet=1.19.0-00 kubeadm=1.19.0-00 kubectl=1.19.0-00
   sudo apt-mark hold kubelet kubeadm kubectl
