@@ -35,8 +35,7 @@ echo 'complete -F __start_kubectl k' >>~/.bashrc
 ```
 
 
-#### Install kubectx to change namespaces and contexts in k8's cluster
--  https://github.com/ahmetb/kubectx
+#### Install [Kubectx](https://github.com/ahmetb/kubectx) to change namespaces and contexts in k8's cluster
 
 ###### Linux
     sudo apt install kubectx
