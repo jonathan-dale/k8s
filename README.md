@@ -29,17 +29,17 @@ echo 'complete -F __start_kubectl k' >>~/.zshrc
 
 - bash on linux
 ```bash
-echo 'source <(kubectl completion bash)' >>~/.bashrc
-```
-> NOTE: if you have an alias for kubectl - extend completion for that alias
-```bash
 echo 'alias k=kubectl' >>~/.bashrc
+echo 'source <(kubectl completion bash)' >>~/.bashrc
 echo 'complete -F __start_kubectl k' >>~/.bashrc
 ```
 
 
 #### Install kubectx to change namespaces and contexts in k8's cluster
 -  https://github.com/ahmetb/kubectx
+
+###### Linux
+    sudo apt install kubectx
 
 ###### macOS
 If you use [Homebrew](https://brew.sh/) you can install like this:
