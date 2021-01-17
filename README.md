@@ -38,17 +38,31 @@ echo 'complete -F __start_kubectl k' >>~/.bashrc
 #### Install [Kubectx](https://github.com/ahmetb/kubectx) to change namespaces and contexts in k8's cluster
 
 ###### Linux
+```bash
     sudo apt install kubectx
+
+		** OR ** 
+
+    git clone https://github.com/ahmetb/kubectx.git ~/.kubectx
+    sudo cp kubectx/kubectx /usr/local/bin/
+    sudo cp kubectx/kubens /usr/local/bin/
+    COMPDIR=$(pkg-config --variable=completionsdir bash-completion)
+    ln -sf ~/.kubectx/completion/kubens.bash $COMPDIR/kubens
+    ln -sf ~/.kubectx/completion/kubectx.bash $COMPDIR/kubectx
+    cat << FOE >> ~/.bashrc
+    
+    
+    #kubectx and kubens
+    export PATH=~/.kubectx:\$PATH
+    FOE
+
+```
 
 ###### macOS
 If you use [Homebrew](https://brew.sh/) you can install like this:
 
     brew install kubectx
 
-That ^^^ command will set up bash/zsh/fish completion scripts automatically.
+That ^^^ will set up bash/zsh/fish completion scripts automatically.
 
-###### Manal installation steps:
-    sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
-    sudo ln -s /opt/kubectx/kubectx /usr/local/bin/kubectx
-    sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 
