@@ -21,11 +21,20 @@ function die {
 }
 
 
+function log_me {
+	echo
+	echo "## +++ $1"
+	echo
+}
+
+
+log_me "checking if user is root"
 AMIROOT=`id -u`
 
 [[ "$AMIROOT" == 0 ]] || die "must be root to run this..." 2
 
 # install junk
+log_me "installing required packages (apt-transport-https, ca-certificates, curl, software-properties-common, gnupg2)"
 sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg2
 
 
@@ -92,8 +101,9 @@ EOF
   sudo sysctl -p
 }
   
-
+log_me "instaling containerd runtime"
 install_containerd
+log_me "installing kubernetes packages"
 install_kubernetes
 
 # awesome!
