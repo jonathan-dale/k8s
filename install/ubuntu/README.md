@@ -1,3 +1,6 @@
+# Use this to create the install script.
+
+
 Kubernetes cluster install on linuxacademy.com
 Spin up three UBUNTU servers:  master-1, node-1, and node-2
 

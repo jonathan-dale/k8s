@@ -1,22 +1,27 @@
-> - Updated and tested as of Dec 20, 2020
-> - Current versions:
-> - kuebctl, kubeadm, and kubelet current version 1.19.00-xx
-# K8's cluster installation, backups, and notes
+# K8's cluster installation, backups, and notes  
+> - Updated and tested as of Feb 10, 2021
+> - Versions: kuebctl, kubeadm, and kubelet current version 1.19.00-xx  
 
 ######
-- A cluster installation script (choose Ubuntu or CentOS)
-- A cluster backup script
+- install -  script to install k8s cluster (kubeadm) using versions above.
+- backup  -  script to backup the cluster into directory containing manifests files.
 
 ##### Setup commands for a fresh server
 
 - ubuntu
 ```bash
-sudo apt-get update -y && sudo apt-get upgrade -y && sudo apt-get install -y git && git clone https://github.com/jonathan-dale/k8s.git
+sudo apt-get update -y \
+   && sudo apt-get upgrade -y \
+   && sudo apt-get install -y git \
+   && git clone https://github.com/jonathan-dale/k8s.git
 ```
 
 - centos
 ```bash
-sudo yum update -y && sudo yum upgrade -y && sudo yum install -y git && git clone https://github.com/jonathan-dale/k8s.git
+sudo yum update -y \
+  && sudo yum upgrade -y \
+  && sudo yum install -y git \
+  && git clone https://github.com/jonathan-dale/k8s.git
 ```
 
 
@@ -54,7 +59,6 @@ echo 'complete -F __start_kubectl k' >>~/.bashrc
     
     #kubectx and kubens
     export PATH=~/.kubectx:\$PATH
-    FOE
 
 ```
 
