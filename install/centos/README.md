@@ -1,18 +1,18 @@
 # Use this to create the install script
 
 ### (Install Docker CE)
-   sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+    sudo yum install -y yum-utils device-mapper-persistent-data lvm2
 
 ### Add the Docker repository
-   sudo yum-config-manager --add-repo \
-     https://download.docker.com/linux/centos/docker-ce.repo
+    sudo yum-config-manager --add-repo \
+        https://download.docker.com/linux/centos/docker-ce.repo
 
 ### Install Docker CE
-   yum update -y && yum install -y \
-     containerd.io-1.2.13 \
-     docker-ce-19.03.11 \
-     docker-ce-cli-19.03.11
-  sudo mkdir /etc/docker
+    yum update -y && yum install -y \
+      containerd.io-1.2.13 \
+      docker-ce-19.03.11 \
+      docker-ce-cli-19.03.11
+    sudo mkdir /etc/docker
 
 ### Set up the Docker daemon
     cat > /etc/docker/daemon.json <<EOF
@@ -29,7 +29,7 @@
     }
     EOF
 
-   mkdir -p /etc/systemd/system/docker.service.d
+    mkdir -p /etc/systemd/system/docker.service.d
 
 ### Restart Docker
     systemctl daemon-reload
