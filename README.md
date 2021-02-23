@@ -2,9 +2,8 @@
 > - Updated and tested as of Feb 10, 2021
 > - Versions: kuebctl, kubeadm, and kubelet current version 1.19.00-xx  
 
-######
-- install directory -  installs k8s cluster (kubeadm) using versions above.
-- backup directory  -  backs up the cluster into directory containing manifests files.
+> install directory -  installs k8s cluster (kubeadm) using versions above.
+> backup directory  -  backs up the cluster into directory containing manifests files.
 
 ##### Setup on a fresh new server
 
@@ -70,5 +69,5 @@ If you use [Homebrew](https://brew.sh/) you can install like this:
 That ^^^ will set up bash/zsh/fish completion scripts automatically.
 
 
-#### Awesome resource about [KUBECONFIG](https://ahmet.im/blog/mastering-kubeconfig/)  
-Masterign the kubeconfig file by Ahmet Alp Balkan (author of kubectx)
+### Awesome resource about [KUBECONFIG](https://ahmet.im/blog/mastering-kubeconfig/)  
+> - Masterign the kubeconfig file by Ahmet Alp Balkan (author of kubectx)
