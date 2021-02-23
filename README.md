@@ -3,12 +3,12 @@
 > - Versions: kuebctl, kubeadm, and kubelet current version 1.19.00-xx  
 
 ######
-- install -  script to install k8s cluster (kubeadm) using versions above.
-- backup  -  script to backup the cluster into directory containing manifests files.
+- install directory -  installs k8s cluster (kubeadm) using versions above.
+- backup directory  -  backs up the cluster into directory containing manifests files.
 
-##### Setup commands for a fresh server
+##### Setup on a fresh new server
 
-- ubuntu
+##### ubuntu
 ```bash
 sudo apt-get update -y \
    && sudo apt-get upgrade -y \
@@ -16,7 +16,7 @@ sudo apt-get update -y \
    && git clone https://github.com/jonathan-dale/k8s.git
 ```
 
-- centos
+##### centos
 ```bash
 sudo yum update -y \
   && sudo yum upgrade -y \
@@ -25,14 +25,14 @@ sudo yum update -y \
 ```
 
 
-##### Kubectl autocompletion
-- zsh
+#### Kubectl autocompletion  
+##### zsh
 ```bash
 echo 'alias k=kubectl' >>~/.zshrc
 echo 'complete -F __start_kubectl k' >>~/.zshrc
 ```
 
-- bash on linux
+##### bash on linux
 ```bash
 echo 'alias k=kubectl' >>~/.bashrc
 echo 'source <(kubectl completion bash)' >>~/.bashrc
@@ -70,3 +70,5 @@ If you use [Homebrew](https://brew.sh/) you can install like this:
 That ^^^ will set up bash/zsh/fish completion scripts automatically.
 
 
+#### Awesome resource about [KUBECONFIG](https://ahmet.im/blog/mastering-kubeconfig/)  
+Masterign the kubeconfig file by Ahmet Alp Balkan (author of kubectx)
