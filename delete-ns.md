@@ -1,6 +1,6 @@
 # How to delete namesapce stuck in 'Terminating' status
 
-> - StackOverflow [source](https://stackoverflow.com/questions/55853312/how-to-force-delete-a-kubernetes-namespace)
+> - Source [StackOverflow](https://stackoverflow.com/questions/55853312/how-to-force-delete-a-kubernetes-namespace)
 
 ### Create this JSON with an empty finalizers list:
 ```sh
