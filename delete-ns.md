@@ -20,7 +20,7 @@
 
 ### Use curl to PUT the object without the problematic finalizer.
 ```sh
-~$ curl -k -H "Content-Type: application/json" -X PUT --data-binary @ns.json http://127.0.0.1:8007/api/v1/namespaces/delete-me/finalize
+~$ kubectl proxy & curl -k -H "Content-Type: application/json" -X PUT --data-binary @ns.json http://127.0.0.1:8007/api/v1/namespaces/delete-me/finalize
 
 {
   "kind": "Namespace",
