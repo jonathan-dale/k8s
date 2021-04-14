@@ -24,9 +24,8 @@
 Starting to serve on 127.0.0.1:8001
 ```
 
+### In new terminal use curl to PUT the object without the problematic finalizer.
 > - The port on `kubectl proxy` command must match the `curl -X PUT` command
-
-### Use curl to PUT the object without the problematic finalizer.
 ```sh
 ~$ curl -k -H "Content-Type: application/json" -X PUT --data-binary @ns.json http://127.0.0.1:8001/api/v1/namespaces/delete-me/finalize
 
