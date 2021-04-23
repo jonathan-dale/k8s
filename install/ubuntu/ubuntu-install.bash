@@ -1,10 +1,10 @@
 #!/bin/bash
 
-set -eou pipefail
-# -e exits immediately on failure
-# -o pipefail exits when any command in a pipe of commands returns non zero exit code not just the last command
-# -u treat unset varables as errors and exit
-# -x print each command before executing
+set -ou pipefail
+## -e exits immediately on failure
+## -o pipefail exits when any command in a pipe of commands returns non zero exit code not just the last command
+## -u treat unset varables as errors and exit
+## -x print each command before executing
 
 function abort {
   EXIT_VAL="$?"
@@ -21,20 +21,26 @@ function die {
 }
 
 
-function log_me {
-	echo
-	echo "## +++ $1"
-	echo
+function info {
+        NOW=`date +%M%S`
+        DIFF=`expr $NOW - $START_TIME`
+	echo '[INFO]['$DIFF'] ' "$@"
 }
 
 
-log_me "checking if user is root"
-AMIROOT=`id -u`
+# timekeeper
+START_TIME=`date +%M%S`
 
+# trap errors for debuggung ***NOTE: will not work with `set -e` option***
+trap abort ERR
+
+
+info "checking if user is root"
+AMIROOT=`id -u`
 [[ "$AMIROOT" == 0 ]] || die "must be root to run this..." 2
 
 # install junk
-log_me "installing required packages (apt-transport-https, ca-certificates, curl, software-properties-common, gnupg2)"
+info "installing required packages (apt-transport-https, ca-certificates, curl, software-properties-common, gnupg2)"
 sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg2
 
 
@@ -101,9 +107,9 @@ EOF
   sudo sysctl -p
 }
   
-log_me "instaling containerd runtime"
+info "instaling containerd runtime"
 install_containerd
-log_me "installing kubernetes packages"
+info "installing kubernetes packages"
 install_kubernetes
 
 # awesome!
