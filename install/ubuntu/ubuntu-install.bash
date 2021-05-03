@@ -118,13 +118,16 @@ cat <<EOF
      Awesome!
      finished installing.......
 
-     ### If this is a  master node, initialize cluster and add a CNI network overlay
+     If this is a  master node, initialize cluster and add a CNI network overlay
 
-         $ sudo kubeadm init --pod-network-cidr=10.244.0.0/16
-         $ kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
+          sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+          mkdir -p $HOME/.kube
+          sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+          sudo chown $(id -u):$(id -g) $HOME/.kube/config
+          kubectl apply -f https://docs.projectcalico.org/v3.14/manifests/calico.yaml
 
-         ## Use this to install K9s
-         $ sudo snap install k9s
+          #  install K9s
+          sudo snap install k9s
 
 
 EOF
