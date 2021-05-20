@@ -1,6 +1,7 @@
 # How to delete namesapce stuck in 'Terminating' status
 
-> - Source [StackOverflow](https://stackoverflow.com/questions/55853312/how-to-force-delete-a-kubernetes-namespace)
+> - Source [StackOverflow](https://stackoverflow.com/questions/55853312/how-to-force-delete-a-kubernetes-namespace)  
+> - Kubernetes [blog](https://kubernetes.io/blog/2021/05/14/using-finalizers-to-control-deletion/) for further reading
 
 ### Create this JSON with an empty finalizers list:
 ```sh
@@ -53,7 +54,7 @@ Starting to serve on 127.0.0.1:8001
 ```
 
 ### The Namespace is deleted!
-```sh~$ kubectl get ns delete-me
-
+```sh
+~$ kubectl get ns delete-me
 Error from server (NotFound): namespaces "delete-me" not found
 ```
