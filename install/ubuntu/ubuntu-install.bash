@@ -95,7 +95,8 @@ sudo apt-get install -y kubelet=1.19.0-00 kubeadm=1.19.0-00 kubectl=1.19.0-00
 sudo apt-mark hold kubelet kubeadm kubectl
 
 # Use completion and 'k' simlink
-ln -s /usr/local/bin/kubectl /usr/local/bin/k
+MY_KUBE=$(which kubectl)
+ln -s $MY_KUBE $(dirname $MY_KUBE)/k || die "Failed to make link to kubectl"
 echo 'source /usr/share/bash-completion/bash_completion' >> /home/ubuntu/.bashrc
 echo 'source <(kubectl completion bash)' >> /home/ubuntu/.bashrc
 echo 'complete -F __start_kubectl k' >> /home/ubuntu/.bashrc
