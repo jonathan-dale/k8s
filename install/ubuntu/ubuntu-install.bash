@@ -30,18 +30,22 @@ function info {
 
 START_TIME=`date +%M%S`
 
+LINE="##########################################################"
+
 # trap errors for debugging ***NOTE: will not work with `set -e` option***
 trap abort ERR
 
-
+echo ${LINE}
 info "checking if user is root"
 AMIROOT=`id -u`
 [[ "$AMIROOT" == 0 ]] || die "must be root to run this..." 2
 
+echo ${LINE}
 info "installing required packages (apt-transport-https, ca-certificates, curl, software-properties-common, gnupg2)"
 sudo apt-get update && sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg2
 
 
+echo ${LINE}
 info "instaling containerd runtime"
 cat <<EOF | sudo tee /etc/modules-load.d/containerd.conf
 overlay
@@ -82,6 +86,7 @@ sudo containerd config default | sudo tee /etc/containerd/config.toml
 sudo systemctl restart containerd
 
 
+echo ${LINE}
 info "installing kubernetes packages"
 # add K8's GPG key and repo
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
@@ -89,6 +94,8 @@ cat << EOF | sudo tee /etc/apt/sources.list.d/kubernetes.list
 deb https://apt.kubernetes.io/ kubernetes-xenial main
 EOF
   
+
+echo ${LINE}
 info "update and install bins, locking in at version 1.19.x.xx here so we can do an update later"
 sudo apt-get update
 sudo apt-get install -y kubelet=1.19.0-00 kubeadm=1.19.0-00 kubectl=1.19.0-00
