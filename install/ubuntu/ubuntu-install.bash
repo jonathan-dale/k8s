@@ -105,9 +105,9 @@ sudo apt-mark hold kubelet kubeadm kubectl
 # Use completion and 'k' simlink
 MY_KUBE=$(which kubectl)
 ln -s $MY_KUBE $(dirname $MY_KUBE)/k || die "Failed to make link to kubectl"
-echo 'source /usr/share/bash-completion/bash_completion' >> /home/ubuntu/.bashrc
-echo 'source <(kubectl completion bash)' >> /home/ubuntu/.bashrc
-echo 'complete -F __start_kubectl k' >> /home/ubuntu/.bashrc
+echo 'source /usr/share/bash-completion/bash_completion' >> /home/ubuntu/.bashrc	|| info "ubuntu user dose not exist, skipping kubectl completion....."
+echo 'source <(kubectl completion bash)' >> /home/ubuntu/.bashrc			|| info "ubuntu user dose not exist, skipping kubectl completion....."
+echo 'complete -F __start_kubectl k' >> /home/ubuntu/.bashrc				|| info "ubuntu user dose not exist, skipping kubectl completion....."
 
 # add ip tables and enable immediately
 echo "net.bridge.bridge-nf-call-iptables=1" | sudo tee -a /etc/sysctl.conf
