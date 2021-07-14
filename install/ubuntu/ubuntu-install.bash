@@ -30,6 +30,7 @@ function info {
 
 START_TIME=`date +%M%S`
 
+
 LINE="##########################################################"
 
 # trap errors for debugging ***NOTE: will not work with `set -e` option***
